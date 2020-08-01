@@ -1,5 +1,8 @@
 import csv
+from datetime import datetime
 from khl_stats_key import khl_value
+now = datetime.now()
+stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
 
 khl_players = ['David Pastrnak', 'Taylor Hall', 'Miles Wood']
 stats_dict = {}
@@ -94,7 +97,7 @@ with open("2019_2020_nhl_goalie_stats.csv", encoding="utf8") as csvfile:
             }
 
 # get KHL rosters
-with open("KHL_rosters.csv", encoding="utf-8-sig") as csvfile:
+with open("khl_rosters.csv", encoding="utf-8-sig") as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
     for row in csvreader:
         khl_player_dict[row[0]] = {
@@ -108,7 +111,7 @@ with open("KHL_rosters.csv", encoding="utf-8-sig") as csvfile:
         }
 
 # write all of the stats & generate point totals per player
-with open('khl_stats.csv', 'w', newline='') as newcsv:
+with open(stats_csv_name, 'w', newline='') as newcsv:
     csvwriter = csv.writer(newcsv, delimiter=',', quotechar='|', quoting=csv.QUOTE_MINIMAL)
     # write the header row for the CSV
     csvwriter.writerow([
@@ -207,3 +210,5 @@ for r in khl_team_dict.values():
         pass
     else:
         print(f"{r['KHL_Team']} - {round(r['Team_Points'], 2)}")
+
+print(f"\nStats can be found in {stats_csv_name}")
