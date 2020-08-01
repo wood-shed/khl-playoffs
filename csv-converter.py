@@ -2,16 +2,31 @@ import csv
 from datetime import datetime
 from khl_stats_key import khl_value
 
-# generate output csv name
-now = datetime.now()
-stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
+##########################################
+### Edit these variables for CSV names ###
+##########################################
+### see examples folder for mock csvs ####
+##########################################
 
+## KHL roster
+khl_roster_csv = "khl_rosters.csv"
+
+## Stats
 # make sure these CSV names point the the latest stats for the week
 skater_stats_csv = "2019_2020_nhl_skater_stats.csv"
 goalie_stats_csv = "2019_2020_nhl_goalie_stats.csv"
-khl_roster_csv = "khl_rosters.csv"
+
 # Skater data source: https://www.hockey-reference.com/leagues/NHL_2020_skaters.html
 # Goalie data source: https://www.hockey-reference.com/leagues/NHL_2020_goalies.html
+
+##########################################
+################## END ###################
+##########################################
+
+
+# generate output csv name
+now = datetime.now()
+stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
 
 # initialize yo dicts
 stats_dict = {}
