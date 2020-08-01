@@ -10,7 +10,7 @@ Run the `csv-converter.py` program to generate the csv. Output csv will follow `
 You will need to ensure that the csv names specified in the top of `csv-converter.py` are all in the same root directory. You need to set the following variables:
 * khl_roster_csv
 * skater_stats_csv
-* goalie_stats_csv*
+* goalie_stats_csv
 
 Default spreadsheets have been provided, but will need to be updated manually when you obtain new stats.
 
