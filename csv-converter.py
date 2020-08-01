@@ -243,3 +243,4 @@ for r in khl_team_dict.values():
         print(f"{r['KHL_Team']} - {round(r['Team_Points'], 2)}")
 
 print(f"\nStats can be found in {stats_csv_name}")
+x = input("Press any key to exit")
