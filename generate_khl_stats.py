@@ -1,4 +1,5 @@
 import csv
+from shutil import copyfile
 from datetime import datetime
 from khl_stats_key import khl_value
 
@@ -13,11 +14,11 @@ khl_roster_csv = "khl_rosters.csv"
 
 ## Stats
 # make sure these CSV names point the the latest stats for the week
-skater_stats_csv = "2019_2020_nhl_skater_stats.csv"
-goalie_stats_csv = "2019_2020_nhl_goalie_stats.csv"
+skater_stats_csv = "2020_nhl_playoffs_skater_stats.csv"
+goalie_stats_csv = "2020_nhl_playoffs_goalie_stats.csv"
 
-# Skater data source: https://www.hockey-reference.com/leagues/NHL_2020_skaters.html
-# Goalie data source: https://www.hockey-reference.com/leagues/NHL_2020_goalies.html
+# Skater data source: https://www.hockey-reference.com/playoffs/NHL_2020_skaters.html
+# Goalie data source: https://www.hockey-reference.com/playoffs/NHL_2020_goalies.html
 
 ##########################################
 ################## END ###################
@@ -27,6 +28,8 @@ goalie_stats_csv = "2019_2020_nhl_goalie_stats.csv"
 # generate output csv name
 now = datetime.now()
 stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
+nhl_skater_stats_name = now.strftime("reference_stat_output/%m-%d-%Y_%H-%M_skater_reference_stats.csv")
+nhl_goalie_stats_name = now.strftime("reference_stat_output/%m-%d-%Y_%H-%M_goalie_reference_stats.csv")
 
 # initialize yo dicts
 stats_dict = {}
@@ -38,40 +41,40 @@ khl_player_dict = {}
 with open(skater_stats_csv, encoding="utf8") as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
     for row in csvreader:
-        split_name = (row[0].split('\\')[0])
+        split_name = (row[1].split('\\')[0])
         if split_name in player_dict.keys():
             pass
         else:
             player_dict[split_name] = {
                 'Name': (split_name),
-                'Team': row[1],
-                'Pos': row[2],
-                'G': row[3],
-                'A': row[4],
-                'PPG': row[5],
-                'SHG': row[6],
-                'GWG': row[7],
-                'PPA': row[8],
-                'SHA': row[9],
-                'SOG': row[10],
-                'BLK': row[11],
-                'HIT': row[12],
+                'Team': row[3],
+                'Pos': row[4],
+                'G': row[6],
+                'A': row[7],
+                'PPG': row[12],
+                'SHG': row[13],
+                'GWG': row[14],
+                'PPA': row[16],
+                'SHA': row[17],
+                'SOG': row[18],
+                'BLK': row[22],
+                'HIT': row[23],
                 # zero out goalie stats
                 'WIN': 0,
                 'GA': 0,
                 'SV': 0,
                 'SO': 0,
                 # calculate the khl point conversion by looking up the value with khl_value()
-                'K_G': (int(row[3]) * (int(khl_value('G')))),
-                'K_A': (int(row[4]) * (int(khl_value('A')))),
-                'K_PPG': (int(row[5]) * (int(khl_value('PPP')))),
-                'K_SHG': (int(row[6]) * (int(khl_value('SHG')))),
-                'K_GWG': (int(row[7]) * (int(khl_value('GWG')))),
-                'K_PPA': (int(row[8]) * (int(khl_value('PPP')))),
-                'K_SHA': (int(row[9]) * (int(khl_value('SHA')))),
-                'K_SOG': (float(row[10]) * (float(khl_value('SOG')))),
-                'K_BLK': (int(row[11]) * (int(khl_value('BLK')))),
-                'K_HIT': (int(row[12]) * (int(khl_value('HIT')))),
+                'K_G': (int(row[6]) * (int(khl_value('G')))),
+                'K_A': (int(row[7]) * (int(khl_value('A')))),
+                'K_PPG': (int(row[12]) * (int(khl_value('PPP')))),
+                'K_SHG': (int(row[13]) * (int(khl_value('SHG')))),
+                'K_GWG': (int(row[14]) * (int(khl_value('GWG')))),
+                'K_PPA': (int(row[16]) * (int(khl_value('PPP')))),
+                'K_SHA': (int(row[17]) * (int(khl_value('SHA')))),
+                'K_SOG': (float(row[18]) * (float(khl_value('SOG')))),
+                'K_BLK': (int(row[22]) * (int(khl_value('BLK')))),
+                'K_HIT': (int(row[23]) * (int(khl_value('HIT')))),
                 # zero out goalie points
                 'K_WIN': 0,
                 'K_GA': 0,
@@ -83,13 +86,13 @@ with open(skater_stats_csv, encoding="utf8") as csvfile:
 with open(goalie_stats_csv, encoding="utf8") as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
     for row in csvreader:
-        split_name = (row[0].split('\\')[0])
+        split_name = (row[1].split('\\')[0])
         if split_name in player_dict.keys():
             pass
         else:
             player_dict[split_name] = {
                 'Name': (split_name),
-                'Team': row[1],
+                'Team': row[3],
                 'Pos': 'G',
                 # zero out skater stats
                 'G': 0,
@@ -102,10 +105,10 @@ with open(goalie_stats_csv, encoding="utf8") as csvfile:
                 'SOG': 0,
                 'BLK': 0,
                 'HIT': 0,
-                'WIN': row[2],
-                'GA': row[3],
-                'SV': row[4],
-                'SO': row[5],
+                'WIN': row[6],
+                'GA': row[8],
+                'SV': row[10],
+                'SO': row[13],
                 # zero out skater stats
                 'K_G': 0,
                 'K_A': 0,
@@ -118,10 +121,10 @@ with open(goalie_stats_csv, encoding="utf8") as csvfile:
                 'K_BLK': 0,
                 'K_HIT': 0,
                 # calculate the khl point conversion by looking up the value with khl_value()
-                'K_WIN': (int(row[2]) * (int(khl_value('WIN')))),
-                'K_GA': (int(row[3]) * (int(khl_value('GA')))),
-                'K_SV': (float(row[4]) * (float(khl_value('SV')))),
-                'K_SO': (int(row[5]) * (int(khl_value('SHO'))))
+                'K_WIN': (int(row[6]) * (int(khl_value('WIN')))),
+                'K_GA': (int(row[8]) * (int(khl_value('GA')))),
+                'K_SV': (float(row[10]) * (float(khl_value('SV')))),
+                'K_SO': (int(row[13]) * (int(khl_value('SHO'))))
             }
 
 # get KHL rosters from the
@@ -224,10 +227,18 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 player_dict[pn]['K_SO'],
                 sum(ksum)  # TODO: put this shit into a function like above
                 ])
+        elif pn in 'Name':
+            pass
+            print(f"This is name!!!!!!")  # this is my lazy way of dealing with the name column in the roster csv
         else:
             pass
-            print(f"warning {pn} was not found!!")
-            # this is my lazy way of dealing with errors
+            # if no player stats are found zero them out and print it out
+            print(f"WARNING {pn} on {pt} was not found!! stats will be zero")
+            csvwriter.writerow([
+                pn,
+                pt,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                ])
 
 # total up the team scores to be printed as an output
 for player in khl_player_dict.values():
@@ -243,4 +254,9 @@ for r in khl_team_dict.values():
         print(f"{r['KHL_Team']} - {round(r['Team_Points'], 2)}")
 
 print(f"\nStats can be found in {stats_csv_name}")
+copyfile(skater_stats_csv, nhl_skater_stats_name)
+print(f"{skater_stats_csv} copied to {nhl_skater_stats_name}")
+copyfile(goalie_stats_csv, nhl_goalie_stats_name)
+print(f"{goalie_stats_csv} copied to {nhl_goalie_stats_name}")
+
 x = input("Press any key to exit")
