@@ -134,6 +134,7 @@ with open(khl_roster_csv, encoding="utf-8-sig") as csvfile:
         khl_player_dict[row[0]] = {
                 'Name': row[0],
                 'KHL_Team': row[1],
+                'NHL_Team': row[2],
                 'KHL_Points': 0
             }
         khl_team_dict[row[1]] ={
@@ -184,7 +185,8 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
 # write the players into the stats_csv_name by iterating through the khl_player_dict and writing their stats from player_dict
     for player in khl_player_dict.values():
         pn = player['Name']
-        pt = player['KHL_Team']
+        pkt = player['KHL_Team']
+        pnt = player['NHL_Team']
         if pn in player_dict:
             # ksum gathers all of the KHL points into a list to be summed
             # TODO: maybe put this crap into the khl_stats_key.py and call it as a function
@@ -194,8 +196,8 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
             # write the csv row for the player by looking most values up in player_dict
             csvwriter.writerow([
                 player_dict[pn]['Name'],
-                pt,
-                player_dict[pn]['Team'],
+                pkt,
+                pnt,
                 player_dict[pn]['Pos'],
                 player_dict[pn]['G'],
                 player_dict[pn]['A'],
@@ -233,11 +235,12 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         else:
             pass
             # if no player stats are found zero them out and print it out
-            print(f"WARNING {pn} on {pt} was not found!! stats will be zero")
+            print(f"WARNING {pn} on {pkt} was not found!! stats will be zero")
             csvwriter.writerow([
                 pn,
-                pt,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                pkt,
+                pnt,
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                 ])
 
 # total up the team scores to be printed as an output
