@@ -183,6 +183,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         ]
     )
 # write the players into the stats_csv_name by iterating through the khl_player_dict and writing their stats from player_dict
+    not_found = 0
     for player in khl_player_dict.values():
         pn = player['Name']
         pkt = player['KHL_Team']
@@ -236,6 +237,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
             pass
             # if no player stats are found zero them out and print it out
             print(f"WARNING {pn} on {pkt} was not found!! stats will be zero")
+            not_found = not_found + 1
             csvwriter.writerow([
                 pn,
                 pkt,
@@ -250,6 +252,7 @@ for player in khl_player_dict.values():
     khl_team_dict[player['KHL_Team']]['Team_Points'] = psum + tsum
 
 # print out team totals for fun
+print(f"\nTotal number of players not found: {not_found} \n")
 for r in khl_team_dict.values():
     if r['KHL_Team'] in 'Team':
         pass
