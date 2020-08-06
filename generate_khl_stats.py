@@ -283,3 +283,5 @@ json = json.dumps(player_dict)
 f = open(player_dict_json,"w")
 f.write(json)
 f.close()
+
+x = input("Press any key to exit")
