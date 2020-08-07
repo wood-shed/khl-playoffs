@@ -33,6 +33,7 @@ def skater_stats(team, player, stats):
     SOG = stats[0]['stat']['shots']
     BLK = stats[0]['stat']['blocked']
     HIT = stats[0]['stat']['hits']
+    GP = stats[0]['stat']['games']
     K_G = (int(G) * (int(khl_value('G'))))
     K_A = (int(A) * (int(khl_value('A'))))
     K_PPG = (int(PPG) * (int(khl_value('PPP'))))
@@ -79,7 +80,8 @@ def skater_stats(team, player, stats):
         'K_GA': 0,
         'K_SV': 0,
         'K_SO': 0,
-        'K_TOT': sum(ksum)
+        'K_TOT': sum(ksum),
+        'GP': GP
     }
 
 def goalie_stats(team, player, stats):
@@ -88,6 +90,7 @@ def goalie_stats(team, player, stats):
     GA = stats[0]['stat']['goalsAgainst']
     SV = stats[0]['stat']['saves']
     SO = stats[0]['stat']['shutouts']
+    GP = stats[0]['stat']['games']
     K_WIN = (int(WIN) * (int(khl_value('WIN'))))
     K_GA = (int(GA) * (int(khl_value('GA'))))
     K_SV = (float(SV) * (float(khl_value('SV'))))
@@ -126,9 +129,10 @@ def goalie_stats(team, player, stats):
         # calculate the khl point conversion by looking up the value with khl_value()
         'K_WIN': K_WIN,
         'K_GA': K_GA,
-        'K_SV': K_GA,
+        'K_SV': K_SV,
         'K_SO': K_SO,
-        'K_TOT': sum(ksum)
+        'K_TOT': sum(ksum),
+        'GP': GP
     }
 
 
@@ -206,7 +210,8 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         'K_GA',
         'K_SV',
         'K_SO',
-        'K_TOTAL'
+        'K_TOTAL',
+        'GP'
         ]
     )
 # write the players into the stats_csv_name by iterating through the khl_player_dict and writing their stats from player_dict
@@ -250,6 +255,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 player_dict[pn]['K_SV'],
                 player_dict[pn]['K_SO'],
                 player_dict[pn]['K_TOT'],
+                player_dict[pn]['GP'],
                 ])
         elif pn in 'Name':
             pass
@@ -263,7 +269,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 pn,
                 pkt,
                 pnt,
-                'NOSTAT', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                'NOSTAT', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                 ])
         else:
             pass
@@ -274,7 +280,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 pn,
                 pkt,
                 pnt,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                 ])
 
 print(f"\nStats can be found in {stats_csv_name}")
