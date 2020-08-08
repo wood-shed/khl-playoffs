@@ -4,3 +4,5 @@
 - update documentation
 - clean up program in general
 - remove uneeded files
+- add in requirements.txt
+- simplify for windows use
