@@ -3,3 +3,4 @@
 - Add the ranking output at the end again
 - update documentation
 - clean up program in general
+- remove uneeded files
