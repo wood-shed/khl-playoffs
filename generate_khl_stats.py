@@ -4,25 +4,28 @@ import requests
 from datetime import datetime
 from khl_stats_key import khl_value
 
-base_url = 'https://statsapi.web.nhl.com/api/v1/'
 
 ## KHL roster
 khl_roster_csv = "khl_rosters.csv"
-player_dict = {}
-khl_team_dict = {}
-khl_player_dict = {}
-no_nhl_stats =[]
 
+# Initialize dicts and lists
+khl_player_dict = {}
+khl_team_dict = {}
+no_nhl_stats = []
+player_dict = {}
+
+# make filenames
 now = datetime.now()
 stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
 player_dict_json = now.strftime("reference_stat_output/%m-%d-%Y_%H-%M_stat_reference_stats.json")
 
+
 def nhl_api(path):
+    base_url = 'https://statsapi.web.nhl.com/api/v1/'
     r = requests.get('{0}{1}'.format(base_url, path))
     return r.json()
 
 def skater_stats(team, player, stats):
-    # print(f"Function results for {player} {stats}")
     G = stats[0]['stat']['goals']
     A = stats[0]['stat']['assists']
     PPG = stats[0]['stat']['powerPlayGoals']
@@ -84,8 +87,8 @@ def skater_stats(team, player, stats):
         'GP': GP
     }
 
+
 def goalie_stats(team, player, stats):
-    # print(f"Function results for {player} {stats}")
     WIN = stats[0]['stat']['wins']
     GA = stats[0]['stat']['goalsAgainst']
     SV = stats[0]['stat']['saves']
@@ -136,10 +139,7 @@ def goalie_stats(team, player, stats):
     }
 
 
-teams = nhl_api('teams')
-
-
-# get KHL rosters from the
+# get KHL rosters from the khl_roster_csv location defined in the beginning and build dicts
 with open(khl_roster_csv, encoding="utf-8-sig") as csvfile:
     csvreader = csv.reader(csvfile, delimiter=",")
     for row in csvreader:
@@ -155,10 +155,14 @@ with open(khl_roster_csv, encoding="utf-8-sig") as csvfile:
         }
 
 
+# use the api to build the player_dict by looping through every player of every team
+teamcount = 1
+teams = nhl_api('teams')
 for t in teams['teams']:
     roster = nhl_api(f"teams/{t['id']}/?expand=team.roster")
     roster = roster['teams'][0]['roster']
-    print(f"\n{t['name']} with {len(roster['roster'])} listed players")
+    print(f"\n# {teamcount} {t['name']} with {len(roster['roster'])} listed players")
+    teamcount = teamcount + 1
     nostats = 0
     for p in roster['roster']:
         stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
@@ -172,6 +176,7 @@ for t in teams['teams']:
                 skater_stats(t['name'], p, stats)
             else:
                 goalie_stats(t['name'], p, stats)
+
 
 # write all of the stats to the stats_csv_name output & generate point totals per player while doing so
 with open(stats_csv_name, 'w', newline='') as newcsv:
@@ -221,6 +226,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         pkt = player['KHL_Team']
         pnt = player['NHL_Team']
         if pn in player_dict:
+            player['KHL_Points'] = player_dict[pn]['K_TOT']
             csvwriter.writerow([
                 player_dict[pn]['Name'],
                 pkt,
@@ -263,7 +269,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         elif pn in no_nhl_stats:
             pass
             # if no player stats are found zero them out and print it out
-            print(f"WARNING {pn} on {pkt} has no NHL stats, stats will be zero in the spreadsheet")
+            print(f"WARNING {pn} ({pnt}) on {pkt} has no NHL stats, stats will be zero in the spreadsheet")
             not_found = not_found + 1
             csvwriter.writerow([
                 pn,
@@ -274,7 +280,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         else:
             pass
             # if no player stats are found zero them out and print it out
-            print(f"WARNING {pn} on {pkt} can't be found ANYWHERE!! stats will be zero")
+            print(f"WARNING {pn} ({pnt}) on {pkt} can't be found ANYWHERE!! stats will be zero")
             not_found = not_found + 1
             csvwriter.writerow([
                 pn,
@@ -282,6 +288,21 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 pnt,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
                 ])
+
+# total up the team scores to be printed as an output
+for player in khl_player_dict.values():
+    tsum = khl_team_dict[player['KHL_Team']]['Team_Points']
+    psum = player['KHL_Points']
+    khl_team_dict[player['KHL_Team']]['Team_Points'] = psum + tsum
+
+# print out team totals for fun
+print(f"\nTotal number of players not found: {not_found} \n")
+for r in khl_team_dict.values():
+    if r['KHL_Team'] in 'Team':
+        pass
+    else:
+        print(f"{r['KHL_Team']} - {round(r['Team_Points'], 2)}")
+
 
 print(f"\nStats can be found in {stats_csv_name}")
 print(f"\njson dump of the stats collected can be found in {player_dict_json}")
