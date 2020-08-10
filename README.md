@@ -2,7 +2,7 @@
 
 A way to convert NHL player stats to fantasy hockey stats as a fill in for the 2020 NHL playoffs.
 
-This queries the public NHL API that is documented in [this gitlab project here](https://gitlab.com/dword4/nhlapi/-/blob/master/stats-api.md#people).2020
+This queries the public NHL API that is documented in [this gitlab project here](https://gitlab.com/dword4/nhlapi/-/blob/master/stats-api.md#people).
 
 This program currently queries for the 2019-2020 playoffs and prints out a CSV of the players specified in the `khl_roster.csv` file.
 
