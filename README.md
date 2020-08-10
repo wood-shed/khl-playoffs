@@ -21,3 +21,7 @@ Run the `generate_khl_stats.py` program to generate the csv. Output csv will fol
 
 ![output](./screenshots/output1.png)
 
+### Legacy
+
+There is a legacy program under `csv-converter` that will use stats CSVs rather than querying the nhl api.
+
