@@ -4,10 +4,10 @@ A way to convert NHL player stats to fantasy hockey stats as a fill in for the 2
 
 This queries the public NHL API that is documented in [this gitlab project here](https://gitlab.com/dword4/nhlapi/-/blob/master/stats-api.md#people).
 
-This program currently queries for the 2019-2020 playoffs and prints out a CSV of the players specified in the `khl_roster.csv` file.
+This program currently gets stats for the 2019-2020 playoffs and prints out a CSV of the players from those specified in the `khl_roster.csv` file.
 
 ## Setup
-Fill out the `khl_roster.csv` with the rosters you'd like to process contains the name, nhl and khl team for each player. Ideally these should be grouped by fantasy team.
+Fill out the `khl_roster.csv` with the rosters of your fantasy teams making sure to include the player name, nhl and khl team in each row. Ideally these should be grouped by fantasy team as the outputted CSV matched the order in the roster csv.
 
 You will need the `requests` module installed on your computer as well as [Python3](https://python.org). Install the requests module by running `python -m pip install requests` in your cmd/terminal.
 
