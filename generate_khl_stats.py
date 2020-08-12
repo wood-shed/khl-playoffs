@@ -7,6 +7,22 @@ from khl_stats_key import khl_value
 
 ## KHL roster
 khl_roster_csv = "khl_rosters.csv"
+active_playoff_teams = ['ARI',
+                        'BOS',
+                        'CAR',
+                        'CBJ',
+                        'CGY',
+                        'CHI',
+                        'COL',
+                        'DAL',
+                        'MTL',
+                        'NYI',
+                        'PHI',
+                        'STL',
+                        'TBL',
+                        'VAN',
+                        'VGK',
+                        'WSH']
 
 # Initialize dicts and lists
 khl_player_dict = {}
@@ -47,6 +63,10 @@ def skater_stats(team, player, stats):
     K_SOG = (float(SOG) * (float(khl_value('SOG'))))
     K_BLK = (int(BLK) * (int(khl_value('BLK'))))
     K_HIT = (int(HIT) * (int(khl_value('HIT'))))
+    if team in active_playoff_teams and GP > 0:
+        ACTIVE = 'Active'
+    else:
+        ACTIVE = 'Inactive'
     ksum = [K_G, K_A, K_PPG, K_SHG, K_GWG, K_PPA, K_SHA, K_SOG, K_BLK, K_HIT]
     player_dict[player['person']['fullName']] = {
         'Name': player['person']['fullName'],
@@ -84,7 +104,8 @@ def skater_stats(team, player, stats):
         'K_SV': 0,
         'K_SO': 0,
         'K_TOT': sum(ksum),
-        'GP': GP
+        'GP': GP,
+        'ACTIVE': ACTIVE
     }
 
 
@@ -98,6 +119,10 @@ def goalie_stats(team, player, stats):
     K_GA = (int(GA) * (int(khl_value('GA'))))
     K_SV = (float(SV) * (float(khl_value('SV'))))
     K_SO = (int(SO) * (int(khl_value('SHO'))))
+    if team in active_playoff_teams and GP > 0:
+        ACTIVE = 'Active'
+    else:
+        ACTIVE = 'Inactive'
     ksum = [K_WIN, K_GA, K_SV, K_SO]
     player_dict[player['person']['fullName']] = {
         'Name': player['person']['fullName'],
@@ -135,7 +160,8 @@ def goalie_stats(team, player, stats):
         'K_SV': K_SV,
         'K_SO': K_SO,
         'K_TOT': sum(ksum),
-        'GP': GP
+        'GP': GP,
+        'ACTIVE': ACTIVE
     }
 
 
@@ -173,9 +199,9 @@ for t in teams['teams']:
             no_nhl_stats.append(p['person']['fullName'])
         else:
             if p['position']['abbreviation'] is not "G":
-                skater_stats(t['name'], p, stats)
+                skater_stats(t['abbreviation'], p, stats)
             else:
-                goalie_stats(t['name'], p, stats)
+                goalie_stats(t['abbreviation'], p, stats)
 
 
 # write all of the stats to the stats_csv_name output & generate point totals per player while doing so
@@ -216,7 +242,8 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         'K_SV',
         'K_SO',
         'K_TOTAL',
-        'GP'
+        'GP',
+        'ACTIVE'
         ]
     )
 # write the players into the stats_csv_name by iterating through the khl_player_dict and writing their stats from player_dict
@@ -262,6 +289,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 player_dict[pn]['K_SO'],
                 player_dict[pn]['K_TOT'],
                 player_dict[pn]['GP'],
+                player_dict[pn]['ACTIVE'],
                 ])
         elif pn in 'Name':
             pass
@@ -275,7 +303,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 pn,
                 pkt,
                 pnt,
-                'NOSTAT', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                'NOSTAT', 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'INACTIVE'
                 ])
         else:
             pass
@@ -286,7 +314,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
                 pn,
                 pkt,
                 pnt,
-                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0
+                0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 'INACTIVE'
                 ])
 
 # total up the team scores to be printed as an output
