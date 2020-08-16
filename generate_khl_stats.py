@@ -5,8 +5,10 @@ from datetime import datetime
 from khl_stats_key import khl_value
 
 
-## KHL roster
+## KHL roster CSV name/location
 khl_roster_csv = "khl_rosters.csv"
+
+## Running list of teams still active in the playoffs
 active_playoff_teams = ['ARI',
                         'BOS',
                         'CAR',
@@ -24,24 +26,42 @@ active_playoff_teams = ['ARI',
                         'VGK',
                         'WSH']
 
+## Any special case exemptions for players on active teams
+inactive_players_active_teams = ['Tuukka Rask']
+
 # Initialize dicts and lists
 khl_player_dict = {}
 khl_team_dict = {}
 no_nhl_stats = []
 player_dict = {}
 
-# make filenames
+# make file names
 now = datetime.now()
 stats_csv_name = now.strftime("%m-%d-%Y_%H-%M_khl_2020_playoff_stats.csv")
 player_dict_json = now.strftime("reference_stat_output/%m-%d-%Y_%H-%M_stat_reference_stats.json")
 
 
+### Functions
+# base function for all api requests, returning requests in json
 def nhl_api(path):
     base_url = 'https://statsapi.web.nhl.com/api/v1/'
     r = requests.get('{0}{1}'.format(base_url, path))
     return r.json()
 
+
+# function that determines value of the ACTIVE stat based on team status and special case exceptions
+def is_active(player_name, nhl_team, GP):
+    if nhl_team in active_playoff_teams and player_name not in inactive_players_active_teams and GP > 0:
+        ACTIVE = 'Active'
+        return ACTIVE
+    else:
+        ACTIVE = 'Inactive'
+        return ACTIVE
+
+
+# function for writing skater stats to player_dict, zeros out goalie stats
 def skater_stats(team, player, stats):
+    player_name = player['person']['fullName']
     G = stats[0]['stat']['goals']
     A = stats[0]['stat']['assists']
     PPG = stats[0]['stat']['powerPlayGoals']
@@ -63,13 +83,12 @@ def skater_stats(team, player, stats):
     K_SOG = (float(SOG) * (float(khl_value('SOG'))))
     K_BLK = (int(BLK) * (int(khl_value('BLK'))))
     K_HIT = (int(HIT) * (int(khl_value('HIT'))))
-    if team in active_playoff_teams and GP > 0:
-        ACTIVE = 'Active'
-    else:
-        ACTIVE = 'Inactive'
+    ACTIVE = is_active(player_name, team, GP)
+    # put all of the KHL points into a list to be summed below
     ksum = [K_G, K_A, K_PPG, K_SHG, K_GWG, K_PPA, K_SHA, K_SOG, K_BLK, K_HIT]
-    player_dict[player['person']['fullName']] = {
-        'Name': player['person']['fullName'],
+    # add the player and stats into the player_dict
+    player_dict[player_name] = {
+        'Name': player_name,
         'Team': team,
         'Pos': player['position']['abbreviation'],
         'G': G,
@@ -109,7 +128,9 @@ def skater_stats(team, player, stats):
     }
 
 
+# function for writing goalie stats to player_dict, zeros out skater stats
 def goalie_stats(team, player, stats):
+    player_name = player['person']['fullName']
     WIN = stats[0]['stat']['wins']
     GA = stats[0]['stat']['goalsAgainst']
     SV = stats[0]['stat']['saves']
@@ -119,13 +140,12 @@ def goalie_stats(team, player, stats):
     K_GA = (int(GA) * (int(khl_value('GA'))))
     K_SV = (float(SV) * (float(khl_value('SV'))))
     K_SO = (int(SO) * (int(khl_value('SHO'))))
-    if team in active_playoff_teams and GP > 0:
-        ACTIVE = 'Active'
-    else:
-        ACTIVE = 'Inactive'
+    ACTIVE = is_active(player_name, team, GP)
+    # put all of the KHL points into a list to be summed below
     ksum = [K_WIN, K_GA, K_SV, K_SO]
-    player_dict[player['person']['fullName']] = {
-        'Name': player['person']['fullName'],
+    # add the player and stats into the player_dict
+    player_dict[player_name] = {
+        'Name': player_name,
         'Team': team,
         'Pos': player['position']['abbreviation'],
         # # zero out skater stats
@@ -182,13 +202,13 @@ with open(khl_roster_csv, encoding="utf-8-sig") as csvfile:
 
 
 # use the api to build the player_dict by looping through every player of every team
-teamcount = 1
+team_count = 1
 teams = nhl_api('teams')
 for t in teams['teams']:
     roster = nhl_api(f"teams/{t['id']}/?expand=team.roster")
     roster = roster['teams'][0]['roster']
-    print(f"\n# {teamcount} {t['name']} with {len(roster['roster'])} listed players")
-    teamcount = teamcount + 1
+    print(f"\n# {team_count} {t['name']} with {len(roster['roster'])} listed players")
+    team_count = team_count + 1
     nostats = 0
     for p in roster['roster']:
         stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
@@ -246,7 +266,7 @@ with open(stats_csv_name, 'w', newline='') as newcsv:
         'ACTIVE'
         ]
     )
-# write the players into the stats_csv_name by iterating through the khl_player_dict and writing their stats from player_dict
+# write the players into the stats_csv_name by iterating through the khl_player_dict + writing their stats from player_dict
     not_found = 0
     for player in khl_player_dict.values():
         pn = player['Name']
