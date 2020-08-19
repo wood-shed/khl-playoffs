@@ -27,7 +27,7 @@ active_playoff_teams = ['ARI',
                         'WSH']
 
 ## Any special case exemptions for players on active teams
-inactive_players_active_teams = ['Tuukka Rask']
+inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
 
 # Initialize dicts and lists
 khl_player_dict = {}
