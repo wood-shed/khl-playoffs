@@ -9,21 +9,14 @@ from khl_stats_key import khl_value
 khl_roster_csv = "khl_rosters.csv"
 
 ## Running list of teams still active in the playoffs
-active_playoff_teams = ['ARI',
-                        'BOS',
-                        'CAR',
-                        'CBJ',
-                        'CGY',
+active_playoff_teams = ['BOS',
                         'COL',
                         'DAL',
-                        'MTL',
                         'NYI',
                         'PHI',
-                        'STL',
                         'TBL',
                         'VAN',
-                        'VGK',
-                        'WSH']
+                        'VGK']
 
 ## Any special case exemptions for players on active teams
 inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
