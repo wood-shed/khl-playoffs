@@ -1,6 +1,7 @@
 import csv
 import json
 import requests
+import time
 from datetime import datetime
 from khl_stats_key import khl_value
 
@@ -17,6 +18,7 @@ active_playoff_teams = ['DAL',
 
 ## Any special case exemptions for players on active teams
 inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
+inactive_teams =['NJD', 'DET', 'BUF', 'SJS', 'ANH', 'LAK', 'OTT']
 
 # Initialize dicts and lists
 khl_player_dict = {}
@@ -194,23 +196,28 @@ with open(khl_roster_csv, encoding="utf-8-sig") as csvfile:
 team_count = 1
 teams = nhl_api('teams')
 for t in teams['teams']:
-    roster = nhl_api(f"teams/{t['id']}/?expand=team.roster")
-    roster = roster['teams'][0]['roster']
-    print(f"\n# {team_count} {t['name']} with {len(roster['roster'])} listed players")
-    team_count = team_count + 1
-    nostats = 0
-    for p in roster['roster']:
-        stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
-        stats = stats['stats'][0]['splits']
-        if len(stats) == 0:
-            nostats = nostats + 1
-            print(f"{nostats}. NHL reports no stats for {p['person']['fullName']} - {p['position']['abbreviation']}")
-            no_nhl_stats.append(p['person']['fullName'])
-        else:
-            if p['position']['abbreviation'] is not "G":
-                skater_stats(t['abbreviation'], p, stats)
+    if t['abbreviation'] not in inactive_teams:
+        roster = nhl_api(f"teams/{t['id']}/?expand=team.roster")
+        roster = roster['teams'][0]['roster']
+        print(f"\n# {team_count} {t['name']} with {len(roster['roster'])} listed players")
+        team_count = team_count + 1
+        nostats = 0
+        for p in roster['roster']:
+            stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
+            stats = stats['stats'][0]['splits']
+            if len(stats) == 0:
+                nostats = nostats + 1
+                print(f"{nostats}. NHL reports no stats for {p['person']['fullName']} - {p['position']['abbreviation']}")
+                no_nhl_stats.append(p['person']['fullName'])
             else:
-                goalie_stats(t['abbreviation'], p, stats)
+                if p['position']['abbreviation'] is not "G":
+                    skater_stats(t['abbreviation'], p, stats)
+                else:
+                    goalie_stats(t['abbreviation'], p, stats)
+    else:
+        print(f"\n# {team_count} {t['name']} did not qualify, skipping...")
+        team_count = team_count + 1
+
 
 
 # write all of the stats to the stats_csv_name output & generate point totals per player while doing so
