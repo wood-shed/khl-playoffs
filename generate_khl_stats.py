@@ -9,13 +9,10 @@ from khl_stats_key import khl_value
 khl_roster_csv = "khl_rosters.csv"
 
 ## Running list of teams still active in the playoffs
-active_playoff_teams = ['BOS',
-                        'COL',
-                        'DAL',
+active_playoff_teams = ['DAL',
                         'NYI',
                         'PHI',
                         'TBL',
-                        'VAN',
                         'VGK']
 
 ## Any special case exemptions for players on active teams
