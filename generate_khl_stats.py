@@ -17,7 +17,53 @@ active_playoff_teams = ['DAL',
                         'VGK']
 
 ## Any special case exemptions for players on active teams
-inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
+inactive_players_active_teams = ['Andrew Ladd', 'Thomas Hickey', 'Christopher Gibson', 'Otto Koivula', 'Sebastian Aho',
+                                 'Noah Dobson', 'Micheal Haley', 'Vitali Kravtsov', "Danny O'Regan", 'Darren Raddysh',
+                                 'Brandon Crawley', 'Libor Hajek', 'Tim Gettinger', 'Vinni Lettieri',
+                                 'Alexandar Georgiev', 'Samuel Morin', 'Chris Stewart', 'Andy Andreoff', 'Andy Welinski',
+                                 'Mark Friedman', 'Alex Lyon', 'Morgan Frost', 'Kirill Ustimenko', 'Egor Zamula',
+                                 'Nick Bjugstad', 'Dominik Simon', 'Chad Ruhwedel', 'Anthony Angello', 'Juuso Riikola',
+                                 'Kevan Miller', 'Maxime Lagace', 'Jakub Zboril', 'Zach Senyshyn', 'Trent Frederic',
+                                 'Urho Vaakanainen', 'Laurent Dauphin', 'Josh Brook', 'Gustav Olofsson',
+                                 'Christian Folin', 'Noah Juulsen', 'Michael McNiven', 'Charlie Lindgren',
+                                 'Cale Fleury', 'Cayden Primeau', 'Ryan Poehling', 'Jack Campbell', 'Nic Petan',
+                                 'Evan Rodrigues', 'Denis Malgin', 'Kasimir Kaskisuo', 'Joseph Woll', 'Calle Rosen',
+                                 'Rasmus Sandin', 'Brett Pesce', 'Max McCormick', 'Anton Forsberg', 'Alex Nedeljkovic',
+                                 'Roland McKeown', 'Clark Bishop', 'Steven Lorentz', 'Jake Bean', 'Eetu Luostarinen',
+                                 'Chris Driedger', 'Philippe Desrosiers', 'Sam Montembeault', 'Chase Priskie',
+                                 'Owen Tippett', 'Curtis McElhinney', 'Steven Stamkos', 'Scott Wedgewood',
+                                 'Mathieu Joseph', 'Shane Gersich', 'Ilya Samsonov', 'Garrett Pilon',
+                                 'Alexander Alexeyev', 'Tyler Lewington', 'Philippe Maillet', 'Pheonix Copley',
+                                 'Vitek Vanecek', 'Daniel Sprong', 'Beck Malenstyn', 'Connor McMichael',
+                                 'Brent Seabrook', 'Andrew Shaw', 'Matt Tomkins', 'Chad Krys', 'Philipp Kurashev',
+                                 'Reese Johnson', 'Nick Seeler', 'Malcolm Subban', 'Dylan Sikura', 'Brandon Hagel',
+                                 'MacKenzie Entwistle', 'Collin Delia', 'Nicolas Beaudin', 'Alec Regula',
+                                 'Kevin Lankinen', 'Eeli Tolvanen', 'Dan Hamhuis', 'Pekka Rinne', 'Korbinian Holzer',
+                                 'Colin Blackwell', 'Troy Grosenick', 'Michael McCarron', 'Daniel Carr', 'Yakov Trenin',
+                                 'Alexandre Carrier', 'Connor Ingram', 'Jay Bouwmeester', 'Derrick Pouliot',
+                                 'Jake Walman', 'Ville Husso', 'Austin Poganski', 'Niko Mikkola', 'Klim Kostin',
+                                 'Travis Hamonic', 'Juuso Valimaki', 'Michael Stone', 'Byron Froese', 'Jon Gillies',
+                                 'Oliver Kylington', 'Austin Czarnik', 'Artyom Zagidulin', 'Alexander Yelesin',
+                                 'Colin Wilson', 'Mark Barberio', 'T.J. Tynan', 'Anton Lindholm', 'Shane Bowers',
+                                 'Hunter Miska', 'Bowen Byram', 'Ryan McLeod', 'Philip Broberg', 'Joakim Nygard',
+                                 'William Lagesson', 'Cooper Marody', 'Tyler Benson', 'Patrick Russell',
+                                 'Stuart Skinner', 'Evan Bouchard', 'Louis Domingue', 'Tyler Graovac', 'Justin Bailey',
+                                 'Jalen Chatfield', 'Jake Kielly', 'Brogan Rafferty', 'Ryan Miller', 'Ryan Getzlaf',
+                                 'David Backes', 'Michael Del Zotto', 'Adam Henrique', 'Jakob Silfverberg',
+                                 'Nicolas Deslauriers', 'Andrew Agozzino', 'Matt Irwin', 'Cam Fowler',
+                                 'Erik Gudbranson', 'Josh Manson', 'John Gibson', 'Rickard Rakell', 'Hampus Lindholm',
+                                 'Christian Djoos', 'Carter Rowney', 'Sonny Milano', 'Danton Heinen', 'Jacob Larsson',
+                                 'Sam Steel', 'Max Jones', 'Martin Hanzal', 'Roman Polak', 'Justin Dowling',
+                                 'Jake Oettinger', 'Ty Dellandrea', 'Brandon Dubinsky', 'Josh Anderson', 'Jakob Lilja',
+                                 'Stefan Matteau', 'Gabriel Carlsson', 'Andrew Peeke', 'Matiss Kivlenieks',
+                                 'Devan Dubnyk', 'Kyle Rau', 'Victor Rask', 'Luke Johnson', 'Louie Belpedio',
+                                 'Kaapo Kahkonen', 'Brennan Menell', 'Gerald Mayhew', 'Mat Robson', 'Bryan Little',
+                                 'Mark Letestu', 'Luca Sbisa', 'Anthony Bitetto', 'Laurent Brossoit', 'Carl Dahlstrom',
+                                 'Sami Niku', 'Mikhail Berdin', 'Nick Schmaltz', 'Ilya Lyubushkin', 'Brandon Pirri',
+                                 'Deryk Engelland', 'Oscar Dansk', 'Reid Duke', 'Dylan Coghlan', 'Peyton Krebs',
+                                 'Tuukka Rask', 'Vladimir Tarasenko']
+
+
 inactive_teams =['NJD', 'DET', 'BUF', 'SJS', 'ANH', 'LAK', 'OTT']
 
 # Initialize dicts and lists
@@ -201,19 +247,20 @@ for t in teams['teams']:
         roster = roster['teams'][0]['roster']
         print(f"\n# {team_count} {t['name']} with {len(roster['roster'])} listed players")
         team_count = team_count + 1
-        nostats = 0
         for p in roster['roster']:
-            stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
-            stats = stats['stats'][0]['splits']
-            if len(stats) == 0:
-                nostats = nostats + 1
-                print(f"{nostats}. NHL reports no stats for {p['person']['fullName']} - {p['position']['abbreviation']}")
-                no_nhl_stats.append(p['person']['fullName'])
-            else:
-                if p['position']['abbreviation'] is not "G":
-                    skater_stats(t['abbreviation'], p, stats)
+            if p['person']['fullName'] not in inactive_players_active_teams:
+                stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
+                stats = stats['stats'][0]['splits']
+                if len(stats) == 0:
+                    print(f"NHL reports no stats for {p['person']['fullName']} - {p['position']['abbreviation']}")
+                    no_nhl_stats.append(p['person']['fullName'])
                 else:
-                    goalie_stats(t['abbreviation'], p, stats)
+                    if p['position']['abbreviation'] is not "G":
+                        skater_stats(t['abbreviation'], p, stats)
+                    else:
+                        goalie_stats(t['abbreviation'], p, stats)
+            else:
+                print(f"{p['person']['fullName']} in inactive list, skipping...")
     else:
         print(f"\n# {team_count} {t['name']} did not qualify, skipping...")
         team_count = team_count + 1
