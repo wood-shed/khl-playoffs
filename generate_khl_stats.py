@@ -12,7 +12,6 @@ khl_roster_csv = "khl_rosters.csv"
 ## Running list of teams still active in the playoffs
 active_playoff_teams = ['DAL',
                         'NYI',
-                        'PHI',
                         'TBL',
                         'VGK']
 
