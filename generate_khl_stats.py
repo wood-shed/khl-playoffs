@@ -16,7 +16,9 @@ active_playoff_teams = ['DAL',
                         'VGK']
 
 ## Any special case exemptions for players on active teams
-inactive_players_active_teams = ['Andrew Ladd', 'Thomas Hickey', 'Christopher Gibson', 'Otto Koivula', 'Sebastian Aho',
+inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
+
+inactive_players = ['Andrew Ladd', 'Thomas Hickey', 'Christopher Gibson', 'Otto Koivula',
                                  'Noah Dobson', 'Micheal Haley', 'Vitali Kravtsov', "Danny O'Regan", 'Darren Raddysh',
                                  'Brandon Crawley', 'Libor Hajek', 'Tim Gettinger', 'Vinni Lettieri',
                                  'Alexandar Georgiev', 'Samuel Morin', 'Chris Stewart', 'Andy Andreoff', 'Andy Welinski',
@@ -59,8 +61,7 @@ inactive_players_active_teams = ['Andrew Ladd', 'Thomas Hickey', 'Christopher Gi
                                  'Kaapo Kahkonen', 'Brennan Menell', 'Gerald Mayhew', 'Mat Robson', 'Bryan Little',
                                  'Mark Letestu', 'Luca Sbisa', 'Anthony Bitetto', 'Laurent Brossoit', 'Carl Dahlstrom',
                                  'Sami Niku', 'Mikhail Berdin', 'Nick Schmaltz', 'Ilya Lyubushkin', 'Brandon Pirri',
-                                 'Deryk Engelland', 'Oscar Dansk', 'Reid Duke', 'Dylan Coghlan', 'Peyton Krebs',
-                                 'Tuukka Rask', 'Vladimir Tarasenko']
+                                 'Deryk Engelland', 'Oscar Dansk', 'Reid Duke', 'Dylan Coghlan', 'Peyton Krebs']
 
 
 inactive_teams =['NJD', 'DET', 'BUF', 'SJS', 'ANH', 'LAK', 'OTT']
@@ -247,7 +248,7 @@ for t in teams['teams']:
         print(f"\n# {team_count} {t['name']} with {len(roster['roster'])} listed players")
         team_count = team_count + 1
         for p in roster['roster']:
-            if p['person']['fullName'] not in inactive_players_active_teams:
+            if p['person']['fullName'] not in inactive_players:
                 stats = nhl_api(f"people/{p['person']['id']}/stats?stats=statsSingleSeasonPlayoffs")
                 stats = stats['stats'][0]['splits']
                 if len(stats) == 0:
