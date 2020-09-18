@@ -11,9 +11,7 @@ khl_roster_csv = "khl_rosters.csv"
 
 ## Running list of teams still active in the playoffs
 active_playoff_teams = ['DAL',
-                        'NYI',
-                        'TBL',
-                        'VGK']
+                        'TBL']
 
 ## Any special case exemptions for players on active teams
 inactive_players_active_teams = ['Tuukka Rask', 'Vladimir Tarasenko']
